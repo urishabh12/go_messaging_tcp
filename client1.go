@@ -34,15 +34,6 @@ func main() {
 }
 
 func readFromServer(conn *net.Conn) {
-	msg, err := bufio.NewReader(*conn).ReadString('\n')
-
-	if err != nil {
-		fmt.Println("Error occured from server")
-		return
-	}
-
-	fmt.Println(msg)
-
 	for {
 		msg, err := bufio.NewReader(*conn).ReadString('\n')
 
