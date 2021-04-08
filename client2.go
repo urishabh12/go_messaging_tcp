@@ -1,15 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net"
-	"bufio"
 	"os"
 )
 
 func main() {
 	conn, err := net.Dial("tcp", "localhost:8085")
-	if(err != nil) {
+	if err != nil {
 		// handle error
 		return
 	}
@@ -18,25 +18,25 @@ func main() {
 	fmt.Printf(pkey + "\n")
 	go readFromServer(&conn)
 	inputReader := bufio.NewReader(os.Stdin)
-	
+
 	for {
 		//Receivers public key and msg
 		input, err := inputReader.ReadString('\n')
 
-		if(err != nil) {
+		if err != nil {
 			fmt.Println("Error occured while reading input from console")
 			return
 		}
 
 		conn.Write([]byte(input + "\n"))
 	}
-	
+
 }
 
 func readFromServer(conn *net.Conn) {
 	msg, err := bufio.NewReader(*conn).ReadString('\n')
 
-	if (err != nil) {
+	if err != nil {
 		fmt.Println("Error occured from server")
 		return
 	}
@@ -46,7 +46,7 @@ func readFromServer(conn *net.Conn) {
 	for {
 		msg, err := bufio.NewReader(*conn).ReadString('\n')
 
-		if(err != nil) {
+		if err != nil {
 			fmt.Println("Error occured from server")
 			return
 		}

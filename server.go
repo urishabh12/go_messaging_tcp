@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net"
-	"fmt"
 	"bufio"
+	"fmt"
+	"net"
 	"strings"
 )
 
 var pool map[string]*net.Conn
 
 func main() {
-	
+
 	pool = make(map[string]*net.Conn)
 	ln, err := net.Listen("tcp", ":8085")
 
@@ -24,17 +24,17 @@ func main() {
 	for {
 		//Accept Connection
 		conn, err := ln.Accept()
-		if (err != nil) {
+		if err != nil {
 			fmt.Println("Error occured while accepting connection")
 		}
 		//Receive Public Key of Client
 		pkey, err := bufio.NewReader(conn).ReadString('\n')
 		//If public key received only then accept the connection
-		if (err == nil) {
+		if err == nil {
 			pkey = strings.Trim(pkey, "\n")
 			_, exists := pool[pkey]
 
-			if (exists) {
+			if exists {
 				conn.Write([]byte("> pkey exists \n"))
 			} else {
 				pool[pkey] = &conn
@@ -49,7 +49,7 @@ func handleConnection(conn *net.Conn, pool *map[string]*net.Conn, connPubKey str
 	for {
 		input, err := bufio.NewReader(*conn).ReadString('\n')
 
-		if (err != nil) {
+		if err != nil {
 			fmt.Println("Error occured from client")
 			delete(*pool, connPubKey)
 			return
@@ -65,11 +65,11 @@ func handleConnection(conn *net.Conn, pool *map[string]*net.Conn, connPubKey str
 
 		_, exists := (*pool)[pkey]
 
-		if (!exists) {
+		if !exists {
 			(*(*pool)[connPubKey]).Write([]byte("Invalid public key\n"))
 		} else {
 			(*(*pool)[pkey]).Write([]byte(input + "\n"))
 		}
-	
+
 	}
 }
